@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --primary-orange: #f97316;
+  --secondary-red: #ef4444;
+  --accent-yellow: #fbbf24;
+  --surface-white: #ffffff;
+  --text-dark: #000000;
+  --card-bg: #f1f5f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary-orange: var(--primary-orange);
+  --color-secondary-red: var(--secondary-red);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-surface-white: var(--surface-white);
+  --color-text-dark: var(--text-dark);
+  --color-card-bg: var(--card-bg);
+  --font-sans: 'Share Tech Mono', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --card-bg: #f1f5f9;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Simple color classes - no gradients */
+.text-orange-primary {
+  color: #f97316;
+}
+
+.text-red-primary {
+  color: #ef4444;
+}
+
+.text-yellow-primary {
+  color: #fbbf24;
+}
+
+.text-black {
+  color: #000000;
+}
+
+.bg-orange-primary {
+  background-color: #f97316;
+}
+
+.bg-red-primary {
+  background-color: #ef4444;
+}
+
+.bg-yellow-primary {
+  background-color: #fbbf24;
+}
+
+.bg-card {
+  background-color: #f1f5f9;
+}
+
+.border-orange-primary {
+  border-color: #f97316;
+}
+
+.border-red-primary {
+  border-color: #ef4444;
+}
+
+.border-yellow-primary {
+  border-color: #fbbf24;
+}
+
+.hover\:bg-orange-secondary:hover {
+  background-color: #ea580c;
+}
+
+.hover\:bg-red-secondary:hover {
+  background-color: #dc2626;
+}
+
+.hover\:bg-yellow-secondary:hover {
+  background-color: #f59e0b;
+}
+
+.hover\:text-orange-primary:hover {
+  color: #f97316;
+}
+
+.hover\:text-red-primary:hover {
+  color: #ef4444;
+}
+
+.hover\:text-yellow-primary:hover {
+  color: #fbbf24;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+

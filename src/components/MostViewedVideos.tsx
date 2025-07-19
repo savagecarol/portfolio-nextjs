@@ -1,0 +1,217 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+interface YouTubeVideo {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  publishedAt: string;
+  channelTitle: string;
+  viewCount: string;
+  likeCount: string;
+  url: string;
+}
+
+export default function MostViewedVideos() {
+  const [videos, setVideos] = useState<YouTubeVideo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMostViewedVideos = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/youtube/most-viewed');
+        if (!response.ok) {
+          throw new Error('Failed to fetch most viewed videos');
+        }
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.message || data.error);
+        }
+        
+        setVideos(data.videos || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch videos');
+        // Fallback to placeholder data
+        setVideos([
+          {
+            id: '1',
+            title: 'Most Popular Video from @savagecarol',
+            description: 'This is my most viewed video with amazing content and insights',
+            thumbnail: '/api/placeholder/youtube1',
+            publishedAt: new Date().toISOString(),
+            channelTitle: '@savagecarol',
+            viewCount: '50000',
+            likeCount: '2500',
+            url: 'https://youtube.com/@savagecarol'
+          },
+          {
+            id: '2',
+            title: 'Second Most Popular Video',
+            description: 'Another highly viewed video from my channel',
+            thumbnail: '/api/placeholder/youtube2',
+            publishedAt: new Date().toISOString(),
+            channelTitle: '@savagecarol',
+            viewCount: '35000',
+            likeCount: '1800',
+            url: 'https://youtube.com/@savagecarol'
+          },
+          {
+            id: '3',
+            title: 'Third Most Popular Video',
+            description: 'This video also performed really well',
+            thumbnail: '/api/placeholder/youtube3',
+            publishedAt: new Date().toISOString(),
+            channelTitle: '@savagecarol',
+            viewCount: '25000',
+            likeCount: '1200',
+            url: 'https://youtube.com/@savagecarol'
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMostViewedVideos();
+  }, []);
+
+  const formatNumber = (num: string) => {
+    const number = parseInt(num);
+    if (number >= 1000000) {
+      return (number / 1000000).toFixed(1) + 'M';
+    } else if (number >= 1000) {
+      return (number / 1000).toFixed(1) + 'K';
+    }
+    return number.toString();
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
+  if (loading) {
+    return (
+      <section id="most-viewed" className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
+              Most Viewed Videos
+            </h2>
+            <p className="text-lg text-black max-w-2xl mx-auto">
+              Loading your most popular videos from @savagecarol...
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-primary"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="most-viewed" className="py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
+            Most Viewed Videos
+          </h2>
+          <p className="text-lg text-black max-w-2xl mx-auto">
+            Check out my most popular videos from @savagecarol
+          </p>
+        </div>
+
+        {error && (
+          <div className="text-center mb-8 p-4 bg-yellow-50 rounded-lg">
+            <p className="text-yellow-800">
+              {error} - Showing placeholder content
+            </p>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {videos.map((video, index) => (
+            <div key={`most-viewed-${video.id}`} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative">
+              {/* Ranking Badge */}
+              <div className="absolute top-4 left-4 z-10">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg ${
+                  index === 0 ? 'bg-yellow-500' : 
+                  index === 1 ? 'bg-gray-400' : 'bg-orange-600'
+                }`}>
+                  {index + 1}
+                </div>
+              </div>
+              
+              <div className="relative h-48 bg-red-primary">
+                {video.thumbnail && video.thumbnail !== '/api/placeholder/youtube' + (index + 1) ? (
+                  <img 
+                    src={video.thumbnail} 
+                    alt={video.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                  </div>
+                )}
+                <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                  {formatNumber(video.viewCount)} views
+                </div>
+              </div>
+              <div className="p-6">
+                <h4 className="text-xl font-bold text-black mb-3 line-clamp-2">
+                  {video.title}
+                </h4>
+                <p className="text-black mb-4 line-clamp-3">
+                  {video.description}
+                </p>
+                <div className="flex items-center justify-between text-sm text-black mb-4">
+                  <span>{formatDate(video.publishedAt)}</span>
+                  <span>❤️ {formatNumber(video.likeCount)}</span>
+                </div>
+                <a
+                  href={video.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 text-orange-primary hover:text-orange-600 font-medium transition-colors"
+                >
+                  <span>Watch on YouTube</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center mt-16">
+          <a
+            href="https://youtube.com/@savagecarol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-3 bg-orange-primary hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span>Subscribe to @savagecarol</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+} 
