@@ -17,6 +17,40 @@ export default function Hero() {
     }
   };
 
+  // Environment variables for content
+  const heroContent = {
+    greeting: process.env.NEXT_PUBLIC_HERO_GREETING || "👋 Hello, I'm Kartikeya Sharma",
+    title: process.env.NEXT_PUBLIC_HERO_TITLE || "Full Stack Engineer & Tech Educator",
+    subtitle: process.env.NEXT_PUBLIC_HERO_SUBTITLE || "I'm a Full Stack Engineer who loves building scalable systems and teaching others how modern backend architecture really works.",
+    desc1: process.env.NEXT_PUBLIC_HERO_DESC1 || "🔍 I break down complex topics like System Design, gRPC, Git, and API protocols into easy-to-understand videos with real code, handwritten notes, and practical examples.",
+    desc2: process.env.NEXT_PUBLIC_HERO_DESC2 || "🎥 Tech Educator on YouTube (@savagecarol) with 100+ in-depth videos helping 1000s of devs upskill in engineering.",
+    desc3: process.env.NEXT_PUBLIC_HERO_DESC3 || "🧠 Currently diving deep into AI & Machine Learning, exploring how intelligent systems work under the hood and how to apply them in real-world projects.",
+    cta1: process.env.NEXT_PUBLIC_HERO_CTA1 || "🎥 Watch My Videos",
+    cta2: process.env.NEXT_PUBLIC_HERO_CTA2 || "💬 Get In Touch",
+    connectText: process.env.NEXT_PUBLIC_HERO_CONNECT || "Connect with me",
+    stats: {
+      stat1: {
+        value: process.env.NEXT_PUBLIC_HERO_STAT1_VALUE || "Full Stack",
+        label: process.env.NEXT_PUBLIC_HERO_STAT1_LABEL || "Engineer"
+      },
+      stat2: {
+        value: process.env.NEXT_PUBLIC_HERO_STAT2_VALUE || "100+",
+        label: process.env.NEXT_PUBLIC_HERO_STAT2_LABEL || "Tech Videos"
+      },
+      stat3: {
+        value: process.env.NEXT_PUBLIC_HERO_STAT3_VALUE || "1000s",
+        label: process.env.NEXT_PUBLIC_HERO_STAT3_LABEL || "Devs Helped"
+      },
+      stat4: {
+        value: process.env.NEXT_PUBLIC_HERO_STAT4_VALUE || "AI/ML",
+        label: process.env.NEXT_PUBLIC_HERO_STAT4_LABEL || "Focus Area"
+      }
+    }
+  };
+
+  // Split title for styling
+  const titleParts = heroContent.title.split('&');
+
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative bg-white pt-20">
       <div className="container mx-auto px-4">
@@ -31,7 +65,7 @@ export default function Hero() {
             <div className="mb-12">
               <div className="inline-flex items-center px-6 py-3 bg-orange-primary text-white rounded-full shadow-lg">
                 <span className="font-semibold text-lg">
-                  👋 Hello, I&apos;m Kartikeya Sharma
+                  {heroContent.greeting}
                 </span>
               </div>
             </div>
@@ -39,31 +73,24 @@ export default function Hero() {
             {/* Main Heading */}
             <div className="mb-8">
               <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 leading-tight">
-                Full Stack
-                <span className="block text-orange-primary">Engineer</span>
-                <span className="block text-black">& Tech Educator</span>
+                {titleParts[0]?.trim()}
+                <span className="block text-orange-primary">{titleParts[1]?.trim()}</span>
               </h1>
             </div>
 
             {/* Subtitle */}
             <div className="mb-10">
               <h2 className="text-xl md:text-2xl text-black/70 font-medium leading-relaxed max-w-4xl mx-auto">
-                I&apos;m a Full Stack Engineer who loves building scalable systems and teaching others how modern backend architecture really works.
+                {heroContent.subtitle}
               </h2>
             </div>
 
             {/* Description */}
             <div className="mb-12">
               <div className="text-lg text-black/60 leading-relaxed max-w-4xl mx-auto space-y-4">
-                <p>
-                  🔍 I break down complex topics like System Design, gRPC, Git, and API protocols into easy-to-understand videos with real code, handwritten notes, and practical examples.
-                </p>
-                <p>
-                  🎥 Tech Educator on YouTube (@savagecarol) with 100+ in-depth videos helping 1000s of devs upskill in engineering.
-                </p>
-                <p>
-                  🧠 Currently diving deep into AI & Machine Learning, exploring how intelligent systems work under the hood and how to apply them in real-world projects.
-                </p>
+                <p>{heroContent.desc1}</p>
+                <p>{heroContent.desc2}</p>
+                <p>{heroContent.desc3}</p>
               </div>
             </div>
 
@@ -74,7 +101,7 @@ export default function Hero() {
                 className="px-8 py-4 bg-orange-primary text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
                 aria-label="Watch my YouTube videos"
               >
-                🎥 Watch My Videos
+                {heroContent.cta1}
               </button>
               
               <button
@@ -82,33 +109,33 @@ export default function Hero() {
                 className="px-8 py-4 border-2 border-gray-300 text-black font-semibold rounded-xl hover:bg-gray-50 hover:border-orange-primary transition-all duration-300 transform hover:scale-105"
                 aria-label="Contact me for projects or collaboration"
               >
-                💬 Get In Touch
+                {heroContent.cta2}
               </button>
             </div>
 
             {/* Stats */}
             <div className="flex justify-center items-center space-x-8 md:space-x-12 mb-16">
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-orange-primary mb-1">Full Stack</div>
-                <div className="text-sm text-black/60">Engineer</div>
+                <div className="text-2xl md:text-3xl font-bold text-orange-primary mb-1">{heroContent.stats.stat1.value}</div>
+                <div className="text-sm text-black/60">{heroContent.stats.stat1.label}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-red-primary mb-1">100+</div>
-                <div className="text-sm text-black/60">Tech Videos</div>
+                <div className="text-2xl md:text-3xl font-bold text-red-primary mb-1">{heroContent.stats.stat2.value}</div>
+                <div className="text-sm text-black/60">{heroContent.stats.stat2.label}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-yellow-primary mb-1">1000s</div>
-                <div className="text-sm text-black/60">Devs Helped</div>
+                <div className="text-2xl md:text-3xl font-bold text-yellow-primary mb-1">{heroContent.stats.stat3.value}</div>
+                <div className="text-sm text-black/60">{heroContent.stats.stat3.label}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">AI/ML</div>
-                <div className="text-sm text-black/60">Focus Area</div>
+                <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">{heroContent.stats.stat4.value}</div>
+                <div className="text-sm text-black/60">{heroContent.stats.stat4.label}</div>
               </div>
             </div>
 
             {/* Social Links */}
             <div className="mb-12">
-              <h3 className="text-lg font-semibold text-black mb-4">Connect with me</h3>
+              <h3 className="text-lg font-semibold text-black mb-4">{heroContent.connectText}</h3>
               <SocialIcons variant="hero" className="justify-center" />
             </div>
           </div>

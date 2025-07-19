@@ -1,6 +1,6 @@
-# 🚀 Kartikeya Sharma - Full Stack Developer Portfolio
+# 🚀 Kartikeya Sharma - Full Stack Engineer Portfolio
 
-A modern, SEO-optimized portfolio website showcasing my work as a Full Stack Developer and Flutter Expert. Built with Next.js 15, TypeScript, and Tailwind CSS.
+A modern, production-ready portfolio website showcasing my work as a Full Stack Engineer and Tech Educator. Built with Next.js 15, TypeScript, and Tailwind CSS, optimized for performance, security, and SEO.
 
 ## ✨ Features
 
@@ -17,9 +17,11 @@ A modern, SEO-optimized portfolio website showcasing my work as a Full Stack Dev
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
-- **Email**: Nodemailer with Gmail SMTP
+- **Email**: Nodemailer with Gmail SMTP (rate limited)
 - **APIs**: YouTube Data API v3, GitHub API
-- **Deployment**: Vercel-ready
+- **Security**: Rate limiting, input validation, security headers
+- **Performance**: Optimized bundle, caching, CDN ready
+- **Deployment**: Vercel-ready with production optimizations
 
 ### 📱 Modern Features
 - **Responsive Design**: Mobile-first approach

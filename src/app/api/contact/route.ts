@@ -1,11 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// Rate limiting map (in production, use Redis)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+// Rate limiting function
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const maxRequests = 5; // 5 requests per 15 minutes
+
+  const userData = rateLimitMap.get(ip);
+  
+  if (!userData || now > userData.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+    return true;
+  }
+
+  if (userData.count >= maxRequests) {
+    return false;
+  }
+
+  userData.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const { name, email, subject, message } = await request.json();
 
-    // Validate input
+    // Enhanced input validation
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { error: 'All fields are required' },
@@ -13,8 +46,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Length validation
+    if (name.length > 100 || subject.length > 200 || message.length > 2000) {
+      return NextResponse.json(
+        { error: 'Input too long' },
+        { status: 400 }
+      );
+    }
+
     // Check if environment variables are set
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_TO) {
+    if (!process.env.EMAIL_FROM || !process.env.EMAIL_PASSWORD || !process.env.EMAIL_TO) {
       console.error('Missing email environment variables');
       return NextResponse.json(
         { error: 'Email configuration not set up' },
@@ -22,18 +72,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create transporter
+    // Create transporter with better error handling
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.EMAIL_FROM,
+        pass: process.env.EMAIL_PASSWORD,
       },
+      // Production settings
+      pool: true,
+      maxConnections: 1,
+      maxMessages: 3,
+      rateLimit: 3,
     });
 
-    // Email content
+    // Email content with XSS protection
+    const sanitizedMessage = message
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.EMAIL_FROM,
       to: process.env.EMAIL_TO,
       subject: `Portfolio Contact: ${subject}`,
       html: `
@@ -51,7 +112,7 @@ export async function POST(request: NextRequest) {
           
           <div style="background-color: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
             <h3 style="color: #333; margin-top: 0;">Message</h3>
-            <p style="line-height: 1.6; color: #555;">${message.replace(/\n/g, '<br>')}</p>
+            <p style="line-height: 1.6; color: #555;">${sanitizedMessage.replace(/\n/g, '<br>')}</p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6; color: #6c757d; font-size: 14px;">

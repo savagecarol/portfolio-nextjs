@@ -2,29 +2,33 @@ import type { Metadata } from "next";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import PerformanceMonitor from "@/components/PerformanceMonitor";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: {
-    default: "Kartikeya Sharma - Full Stack Developer & Flutter Expert",
+    default: "Kartikeya Sharma - Full Stack Engineer & Tech Educator",
     template: "%s | Kartikeya Sharma"
   },
-  description: "Full Stack Developer and Flutter Expert with 3+ years of experience. Specializing in React, Next.js, TypeScript, and mobile app development. Creating scalable, modern web and mobile applications.",
+  description: "Full Stack Engineer and Tech Educator with expertise in backend architecture, system design, gRPC, Git, and AI/ML. Creating in-depth educational content on YouTube (@savagecarol) with 100+ videos helping developers upskill.",
   keywords: [
-    "Full Stack Developer",
-    "Flutter Developer", 
+    "Full Stack Engineer",
+    "Tech Educator", 
+    "Backend Architecture",
+    "System Design",
+    "gRPC",
+    "Git",
+    "AI/ML",
+    "YouTube Educator",
     "React Developer",
     "Next.js Developer",
     "TypeScript Developer",
-    "Mobile App Developer",
-    "Web Developer",
-    "Frontend Developer",
     "Backend Developer",
     "JavaScript Developer",
     "Node.js Developer",
     "Portfolio",
     "Software Engineer",
-    "UI/UX Developer",
-    "Cross-platform Development"
+    "Microservices",
+    "API Design"
   ],
   authors: [{ name: "Kartikeya Sharma", url: "https://github.com/savagecarol" }],
   creator: "Kartikeya Sharma",
@@ -42,22 +46,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://savagecarol.dev",
-    title: "Kartikeya Sharma - Full Stack Developer & Flutter Expert",
-    description: "Full Stack Developer and Flutter Expert with 3+ years of experience. Specializing in React, Next.js, TypeScript, and mobile app development.",
+    title: "Kartikeya Sharma - Full Stack Engineer & Tech Educator",
+    description: "Full Stack Engineer and Tech Educator with expertise in backend architecture, system design, gRPC, Git, and AI/ML. Creating in-depth educational content on YouTube (@savagecarol) with 100+ videos helping developers upskill.",
     siteName: "Kartikeya Sharma Portfolio",
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Kartikeya Sharma - Full Stack Developer Portfolio',
+        alt: 'Kartikeya Sharma - Full Stack Engineer & Tech Educator Portfolio',
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kartikeya Sharma - Full Stack Developer & Flutter Expert",
-    description: "Full Stack Developer and Flutter Expert with 3+ years of experience. Specializing in React, Next.js, TypeScript, and mobile app development.",
+    title: "Kartikeya Sharma - Full Stack Engineer & Tech Educator",
+    description: "Full Stack Engineer and Tech Educator with expertise in backend architecture, system design, gRPC, Git, and AI/ML. Creating in-depth educational content on YouTube (@savagecarol) with 100+ videos helping developers upskill.",
     creator: "@savagecarol",
     images: ['/og-image.png'],
   },
@@ -118,29 +122,33 @@ export default function RootLayout({
               "name": "Kartikeya Sharma",
               "alternateName": "SavageCarol",
               "url": "https://savagecarol.dev",
-              "image": "https://savagecarol.dev/profile-image.jpg",
+              "image": "https://savagecarol.dev/og-image.png",
               "sameAs": [
                 "https://github.com/savagecarol",
                 "https://linkedin.com/in/savagecarol",
                 "https://youtube.com/@savagecarol",
                 "https://medium.com/@savagecarol"
               ],
-              "jobTitle": "Full Stack Developer",
+              "jobTitle": "Full Stack Engineer & Tech Educator",
               "worksFor": {
                 "@type": "Organization",
                 "name": "Freelance"
               },
               "knowsAbout": [
+                "Backend Architecture",
+                "System Design",
+                "gRPC",
+                "Git",
+                "AI/ML",
                 "React",
                 "Next.js", 
-                "Flutter",
                 "TypeScript",
                 "JavaScript",
                 "Node.js",
-                "Mobile App Development",
-                "Web Development"
+                "Microservices",
+                "API Design"
               ],
-              "description": "Full Stack Developer and Flutter Expert with 3+ years of experience specializing in modern web and mobile technologies."
+              "description": "Full Stack Engineer and Tech Educator with expertise in backend architecture, system design, gRPC, Git, and AI/ML. Creating in-depth educational content on YouTube (@savagecarol) with 100+ videos helping developers upskill."
             })
           }}
         />
@@ -164,9 +172,11 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <StructuredData />
-        <PerformanceMonitor />
-        {children}
+        <ErrorBoundary>
+          <StructuredData />
+          <PerformanceMonitor />
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   );
