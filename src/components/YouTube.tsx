@@ -130,19 +130,35 @@ export default function YouTube() {
   if (loading) {
     return (
       <section id="youtube" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+        <motion.div 
+          ref={ref}
+          className="container mx-auto px-4"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+          >
             <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
               YouTube Channel
             </h2>
             <p className="text-lg text-black max-w-2xl mx-auto">
               Loading your latest videos from @savagecarol...
             </p>
-          </div>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-primary"></div>
-          </div>
-        </div>
+          </motion.div>
+          <motion.div 
+            className="flex justify-center"
+            variants={fadeInUp}
+          >
+            <motion.div 
+              className="rounded-full h-12 w-12 border-2 border-orange-primary"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+        </motion.div>
       </section>
     );
   }
