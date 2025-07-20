@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCachedApi } from '../lib/useCachedApi';
+import { CACHE_KEYS } from '../lib/cache';
 
 interface YouTubeVideo {
   id: string;
@@ -15,70 +16,50 @@ interface YouTubeVideo {
 }
 
 export default function MostViewedVideos() {
-  const [videos, setVideos] = useState<YouTubeVideo[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const fallbackVideos: YouTubeVideo[] = [
+    {
+      id: '1',
+      title: 'Most Popular Video from @savagecarol',
+      description: 'This is my most viewed video with amazing content and insights',
+      thumbnail: '/api/placeholder/youtube1',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '50000',
+      likeCount: '2500',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '2',
+      title: 'Second Most Popular Video',
+      description: 'Another highly viewed video from my channel',
+      thumbnail: '/api/placeholder/youtube2',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '35000',
+      likeCount: '1800',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '3',
+      title: 'Third Most Popular Video',
+      description: 'This video also performed really well',
+      thumbnail: '/api/placeholder/youtube3',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '25000',
+      likeCount: '1200',
+      url: 'https://youtube.com/@savagecarol'
+    }
+  ];
 
-  useEffect(() => {
-    const fetchMostViewedVideos = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/youtube/most-viewed');
-        if (!response.ok) {
-          throw new Error('Failed to fetch most viewed videos');
-        }
-        const data = await response.json();
-        
-        if (data.error) {
-          throw new Error(data.message || data.error);
-        }
-        
-        setVideos(data.videos || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch videos');
-        // Fallback to placeholder data
-        setVideos([
-          {
-            id: '1',
-            title: 'Most Popular Video from @savagecarol',
-            description: 'This is my most viewed video with amazing content and insights',
-            thumbnail: '/api/placeholder/youtube1',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '50000',
-            likeCount: '2500',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '2',
-            title: 'Second Most Popular Video',
-            description: 'Another highly viewed video from my channel',
-            thumbnail: '/api/placeholder/youtube2',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '35000',
-            likeCount: '1800',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '3',
-            title: 'Third Most Popular Video',
-            description: 'This video also performed really well',
-            thumbnail: '/api/placeholder/youtube3',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '25000',
-            likeCount: '1200',
-            url: 'https://youtube.com/@savagecarol'
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data, loading, error } = useCachedApi<{ videos: YouTubeVideo[] }>({
+    cacheKey: CACHE_KEYS.YOUTUBE_MOST_VIEWED,
+    apiUrl: '/api/youtube/most-viewed',
+    expiryHours: 24,
+    fallbackData: { videos: fallbackVideos }
+  });
 
-    fetchMostViewedVideos();
-  }, []);
+  const videos = data?.videos || fallbackVideos;
 
   const formatNumber = (num: string) => {
     const number = parseInt(num);

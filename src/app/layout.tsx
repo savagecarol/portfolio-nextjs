@@ -3,6 +3,7 @@ import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import PerformanceMonitor from "@/components/PerformanceMonitor";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import CacheManager from "@/components/CacheManager";
 
 export const metadata: Metadata = {
   title: {
@@ -176,6 +177,7 @@ export default function RootLayout({
           <StructuredData />
           <PerformanceMonitor />
           {children}
+          <CacheManager />
         </ErrorBoundary>
       </body>
     </html>

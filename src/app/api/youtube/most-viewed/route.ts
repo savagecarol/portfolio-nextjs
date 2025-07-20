@@ -46,6 +46,8 @@ export async function GET() {
       }, { status: 500 });
     }
 
+
+
     // Get most viewed videos using search with order=viewCount, excluding shorts
     const mostViewedResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=viewCount&type=video&maxResults=30&key=${apiKey}`
@@ -112,11 +114,18 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({ 
+    // Update the response with actual data
+    const responseData = { 
       videos: mostViewedVideos,
       channelId,
       message: 'Most viewed videos fetched successfully'
-    });
+    };
+    
+    const response = NextResponse.json(responseData);
+    response.headers.set('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    response.headers.set('Expires', new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString());
+    
+    return response;
   } catch (error) {
     console.error('Error fetching most viewed videos:', error);
     return NextResponse.json({ 

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCachedApi } from '../lib/useCachedApi';
+import { CACHE_KEYS } from '../lib/cache';
 
 interface YouTubeVideo {
   id: string;
@@ -24,106 +25,84 @@ interface YouTubePlaylist {
 }
 
 export default function YouTube() {
-  const [videos, setVideos] = useState<YouTubeVideo[]>([]);
-  const [playlists, setPlaylists] = useState<YouTubePlaylist[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const fallbackVideos: YouTubeVideo[] = [
+    {
+      id: '1',
+      title: 'Latest Video from @savagecarol',
+      description: 'Amazing content from your YouTube channel',
+      thumbnail: '/api/placeholder/youtube1',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '1000',
+      likeCount: '100',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '2',
+      title: 'Another Great Video',
+      description: 'More awesome content from your channel',
+      thumbnail: '/api/placeholder/youtube2',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '800',
+      likeCount: '80',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '3',
+      title: 'Must Watch Content',
+      description: 'Don\'t miss this amazing video',
+      thumbnail: '/api/placeholder/youtube3',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '600',
+      likeCount: '60',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '4',
+      title: 'Fourth Latest Video',
+      description: 'Another great video from your channel',
+      thumbnail: '/api/placeholder/youtube4',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '500',
+      likeCount: '50',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '5',
+      title: 'Fifth Latest Video',
+      description: 'More amazing content for you',
+      thumbnail: '/api/placeholder/youtube5',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '400',
+      likeCount: '40',
+      url: 'https://youtube.com/@savagecarol'
+    },
+    {
+      id: '6',
+      title: 'Sixth Latest Video',
+      description: 'The latest addition to your channel',
+      thumbnail: '/api/placeholder/youtube6',
+      publishedAt: new Date().toISOString(),
+      channelTitle: '@savagecarol',
+      viewCount: '300',
+      likeCount: '30',
+      url: 'https://youtube.com/@savagecarol'
+    }
+  ];
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/youtube/latest');
-        if (!response.ok) {
-          throw new Error('Failed to fetch latest videos');
-        }
-        const data = await response.json();
-        
-        if (data.error) {
-          throw new Error(data.message || data.error);
-        }
-        
-        setVideos(data.videos || []);
-        setPlaylists([]); // No playlists needed for latest videos
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch videos');
-        // Fallback to placeholder data
-        setVideos([
-          {
-            id: '1',
-            title: 'Latest Video from @savagecarol',
-            description: 'Amazing content from your YouTube channel',
-            thumbnail: '/api/placeholder/youtube1',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '1000',
-            likeCount: '100',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '2',
-            title: 'Another Great Video',
-            description: 'More awesome content from your channel',
-            thumbnail: '/api/placeholder/youtube2',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '800',
-            likeCount: '80',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '3',
-            title: 'Must Watch Content',
-            description: 'Don\'t miss this amazing video',
-            thumbnail: '/api/placeholder/youtube3',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '600',
-            likeCount: '60',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '4',
-            title: 'Fourth Latest Video',
-            description: 'Another great video from your channel',
-            thumbnail: '/api/placeholder/youtube4',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '500',
-            likeCount: '50',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '5',
-            title: 'Fifth Latest Video',
-            description: 'More amazing content for you',
-            thumbnail: '/api/placeholder/youtube5',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '400',
-            likeCount: '40',
-            url: 'https://youtube.com/@savagecarol'
-          },
-          {
-            id: '6',
-            title: 'Sixth Latest Video',
-            description: 'The latest addition to your channel',
-            thumbnail: '/api/placeholder/youtube6',
-            publishedAt: new Date().toISOString(),
-            channelTitle: '@savagecarol',
-            viewCount: '300',
-            likeCount: '30',
-            url: 'https://youtube.com/@savagecarol'
-          }
-        ]);
-        setPlaylists([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data, loading, error } = useCachedApi<{ videos: YouTubeVideo[] }>({
+    cacheKey: CACHE_KEYS.YOUTUBE_LATEST,
+    apiUrl: '/api/youtube/latest',
+    expiryHours: 24,
+    fallbackData: { videos: fallbackVideos }
+  });
 
-    fetchVideos();
-  }, []);
+  const videos = data?.videos || fallbackVideos;
+  const playlists: YouTubePlaylist[] = []; // No playlists needed for latest videos
 
   const formatNumber = (num: string) => {
     const number = parseInt(num);
