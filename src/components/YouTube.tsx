@@ -1,7 +1,10 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useCachedApi } from '../lib/useCachedApi';
 import { CACHE_KEYS } from '../lib/cache';
+import { fadeInUp, staggerContainer, scaleIn, cardHover, buttonHover } from '../lib/animations';
+import { useScrollAnimation } from '../lib/useScrollAnimation';
 
 interface YouTubeVideo {
   id: string;
@@ -25,6 +28,7 @@ interface YouTubePlaylist {
 }
 
 export default function YouTube() {
+  const { ref, isInView } = useScrollAnimation();
   const fallbackVideos: YouTubeVideo[] = [
     {
       id: '1',
@@ -145,32 +149,55 @@ export default function YouTube() {
 
   return (
     <section id="youtube" className="py-20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+      <motion.div 
+        ref={ref}
+        className="container mx-auto px-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+      >
+        <motion.div 
+          className="text-center mb-16"
+          variants={fadeInUp}
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
             YouTube Channel
           </h2>
           <p className="text-lg text-black max-w-2xl mx-auto">
             Check out my latest videos on my YouTube channel @savagecarol
           </p>
-        </div>
+        </motion.div>
 
         {error && (
-          <div className="text-center mb-8 p-4 bg-yellow-50 rounded-lg">
+          <motion.div 
+            className="text-center mb-8 p-4 bg-yellow-50 rounded-lg"
+            variants={fadeInUp}
+          >
             <p className="text-yellow-800">
               {error} - Showing placeholder content
             </p>
-          </div>
+          </motion.div>
         )}
 
         {/* Videos Section */}
-        <div className="mb-16">
+        <motion.div 
+          className="mb-16"
+          variants={fadeInUp}
+        >
           <h3 className="text-3xl font-bold text-black mb-8 text-center">
             Latest Videos
           </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div 
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={staggerContainer}
+          >
             {videos.map((video, index) => (
-              <div key={video.id} className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <motion.div 
+                key={video.id} 
+                className="bg-card rounded-xl shadow-lg overflow-hidden"
+                variants={scaleIn}
+                whileHover={cardHover}
+              >
                 <div className="relative h-48 bg-red-primary">
                   {video.thumbnail && video.thumbnail !== '/api/placeholder/youtube' + (index + 1) ? (
                     <img 
@@ -200,38 +227,45 @@ export default function YouTube() {
                     <span>{formatDate(video.publishedAt)}</span>
                     <span>❤️ {formatNumber(video.likeCount)}</span>
                   </div>
-                  <a
+                  <motion.a
                     href={video.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 text-orange-primary hover:text-orange-600 font-medium transition-colors"
+                    className="inline-flex items-center space-x-2 text-orange-primary font-medium"
+                    whileHover={{ color: '#ea580c' }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <span>Watch on YouTube</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
-                  </a>
+                  </motion.a>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Call to Action */}
-        <div className="text-center mt-16">
-          <a
+        <motion.div 
+          className="text-center mt-16"
+          variants={fadeInUp}
+        >
+          <motion.a
             href="https://youtube.com/@savagecarol"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-3 bg-orange-primary hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="inline-flex items-center space-x-3 bg-orange-primary text-white px-8 py-4 rounded-lg font-semibold shadow-lg"
+            whileHover={buttonHover}
+            whileTap={{ scale: 0.95 }}
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
             <span>Subscribe to @savagecarol</span>
-          </a>
-        </div>
-      </div>
+          </motion.a>
+        </motion.div>
+      </motion.div>
     </section>
   );
 } 

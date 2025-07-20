@@ -1,9 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer, scaleIn, cardHover } from '../lib/animations';
+import { useScrollAnimation } from '../lib/useScrollAnimation';
 
 export default function Skills() {
   const [activeCategory, setActiveCategory] = useState('frontend');
+  const { ref, isInView } = useScrollAnimation();
 
   const skills = {
     frontend: [
@@ -37,21 +41,33 @@ export default function Skills() {
 
   return (
     <section id="skills" className="py-20 bg-slate-50 dark:bg-slate-900">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+      <motion.div 
+        ref={ref}
+        className="container mx-auto px-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+      >
+        <motion.div 
+          className="text-center mb-16"
+          variants={fadeInUp}
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-slate-800 dark:text-white mb-4">
             Skills & Technologies
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             Here are the technologies and tools I work with to bring ideas to life
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Tabs */}
-        <div className="flex justify-center mb-12">
+        <motion.div 
+          className="flex justify-center mb-12"
+          variants={fadeInUp}
+        >
           <div className="bg-white dark:bg-slate-800 p-2 rounded-xl shadow-lg">
             {categories.map((category) => (
-              <button
+              <motion.button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
@@ -59,20 +75,27 @@ export default function Skills() {
                     ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <span className="mr-2">{category.icon}</span>
                 {category.name}
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <motion.div 
+          className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+          variants={staggerContainer}
+        >
           {skills[activeCategory as keyof typeof skills].map((skill, index) => (
-            <div
+            <motion.div
               key={skill.name}
-              className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg"
+              variants={scaleIn}
+              whileHover={cardHover}
             >
               <div className="flex justify-between items-center mb-3">
                 <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
@@ -83,59 +106,73 @@ export default function Skills() {
                 </span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
-                <div
-                  className={`h-3 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ease-out`}
-                  style={{ width: `${skill.level}%` }}
-                ></div>
+                <motion.div
+                  className={`h-3 rounded-full bg-gradient-to-r ${skill.color}`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${skill.level}%` }}
+                  transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+                />
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Additional Skills */}
-        <div className="mt-16 text-center">
+        <motion.div 
+          className="mt-16 text-center"
+          variants={fadeInUp}
+        >
           <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-8">
             Other Skills & Interests
           </h3>
-          <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
+          <motion.div 
+            className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto"
+            variants={staggerContainer}
+          >
             {[
               'Responsive Design', 'REST APIs', 'GraphQL', 'Testing', 'CI/CD',
               'Performance Optimization', 'SEO', 'Accessibility', 'Agile/Scrum',
               'Problem Solving', 'Team Collaboration', 'Technical Writing'
             ].map((skill) => (
-              <span
+              <motion.span
                 key={skill}
-                className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium shadow-md"
+                variants={scaleIn}
+                whileHover={{ scale: 1.1, y: -5 }}
               >
                 {skill}
-              </span>
+              </motion.span>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Learning Section */}
-        <div className="mt-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white text-center">
+        <motion.div 
+          className="mt-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white text-center"
+          variants={fadeInUp}
+        >
           <h3 className="text-2xl font-bold mb-4">Always Learning</h3>
           <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
             Technology evolves rapidly, and I'm committed to staying current with the latest trends and tools.
             Currently exploring new frameworks and methodologies to enhance my development skills.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <span className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
-              Rust
-            </span>
-            <span className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
-              Web3
-            </span>
-            <span className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
-              Machine Learning
-            </span>
-            <span className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
-              Microservices
-            </span>
-          </div>
-        </div>
-      </div>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-4"
+            variants={staggerContainer}
+          >
+            {['Rust', 'Web3', 'Machine Learning', 'Microservices'].map((tech) => (
+              <motion.span
+                key={tech}
+                className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm"
+                variants={scaleIn}
+                whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 255, 255, 0.3)' }}
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 } 

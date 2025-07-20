@@ -1,14 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import SocialIcons from './SocialIcons';
+import { fadeInUp, staggerContainer, bounce, buttonHover } from '../lib/animations';
 
 export default function Hero() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -53,101 +49,151 @@ export default function Hero() {
 
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative bg-white pt-20">
-      <div className="container mx-auto px-4">
-        <div className={`transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
+      <motion.div 
+        className="container mx-auto px-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
           
           {/* Main Content */}
           <div className="text-center max-w-5xl mx-auto">
             
             {/* Greeting */}
-            <div className="mb-12">
+            <motion.div 
+              className="mb-12"
+              variants={bounce}
+            >
               <div className="inline-flex items-center px-6 py-3 bg-orange-primary text-white rounded-full shadow-lg">
                 <span className="font-semibold text-lg">
                   {heroContent.greeting}
                 </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Main Heading */}
-            <div className="mb-8">
+            <motion.div 
+              className="mb-8"
+              variants={fadeInUp}
+            >
               <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 leading-tight">
                 {titleParts[0]?.trim()}
                 <span className="block text-orange-primary">{titleParts[1]?.trim()}</span>
               </h1>
-            </div>
+            </motion.div>
 
             {/* Subtitle */}
-            <div className="mb-10">
+            <motion.div 
+              className="mb-10"
+              variants={fadeInUp}
+            >
               <h2 className="text-xl md:text-2xl text-black/70 font-medium leading-relaxed max-w-4xl mx-auto">
                 {heroContent.subtitle}
               </h2>
-            </div>
+            </motion.div>
 
             {/* Description */}
-            <div className="mb-12">
+            <motion.div 
+              className="mb-12"
+              variants={fadeInUp}
+            >
               <div className="text-lg text-black/60 leading-relaxed max-w-4xl mx-auto space-y-4">
                 <p>{heroContent.desc1}</p>
                 <p>{heroContent.desc2}</p>
                 <p>{heroContent.desc3}</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-              <button
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+              variants={fadeInUp}
+            >
+              <motion.button
                 onClick={() => scrollToSection('youtube')}
-                className="px-8 py-4 bg-orange-primary text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="px-8 py-4 bg-orange-primary text-white font-semibold rounded-xl shadow-lg"
                 aria-label="Watch my YouTube videos"
+                whileHover={buttonHover}
+                whileTap={{ scale: 0.95 }}
               >
                 {heroContent.cta1}
-              </button>
+              </motion.button>
               
-              <button
+              <motion.button
                 onClick={() => scrollToSection('contact')}
-                className="px-8 py-4 border-2 border-gray-300 text-black font-semibold rounded-xl hover:bg-gray-50 hover:border-orange-primary transition-all duration-300 transform hover:scale-105"
+                className="px-8 py-4 border-2 border-gray-300 text-black font-semibold rounded-xl hover:bg-gray-50 hover:border-orange-primary"
                 aria-label="Contact me for projects or collaboration"
+                whileHover={buttonHover}
+                whileTap={{ scale: 0.95 }}
               >
                 {heroContent.cta2}
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
             {/* Stats */}
-            <div className="flex justify-center items-center space-x-8 md:space-x-12 mb-16">
-              <div className="text-center">
+            <motion.div 
+              className="flex justify-center items-center space-x-8 md:space-x-12 mb-16"
+              variants={fadeInUp}
+            >
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="text-2xl md:text-3xl font-bold text-orange-primary mb-1">{heroContent.stats.stat1.value}</div>
                 <div className="text-sm text-black/60">{heroContent.stats.stat1.label}</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="text-2xl md:text-3xl font-bold text-red-primary mb-1">{heroContent.stats.stat2.value}</div>
                 <div className="text-sm text-black/60">{heroContent.stats.stat2.label}</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="text-2xl md:text-3xl font-bold text-yellow-primary mb-1">{heroContent.stats.stat3.value}</div>
                 <div className="text-sm text-black/60">{heroContent.stats.stat3.label}</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">{heroContent.stats.stat4.value}</div>
                 <div className="text-sm text-black/60">{heroContent.stats.stat4.label}</div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Social Links */}
-            <div className="mb-12">
+            <motion.div 
+              className="mb-12"
+              variants={fadeInUp}
+            >
               <h3 className="text-lg font-semibold text-black mb-4">{heroContent.connectText}</h3>
               <SocialIcons variant="hero" className="justify-center" />
-            </div>
+            </motion.div>
           </div>
-        </div>
-      </div>
+        </motion.div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <motion.div 
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
         <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
+          <motion.div 
+            className="w-1 h-3 bg-gray-400 rounded-full mt-2"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 } 
